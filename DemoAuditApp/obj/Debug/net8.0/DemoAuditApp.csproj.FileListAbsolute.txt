@@ -1,4 +1,0 @@
-C:\Users\Chaqu\OneDrive\Escritorio\diez\auditoria-estatica\DemoAuditApp\obj\Debug\net8.0\DemoAuditApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Chaqu\OneDrive\Escritorio\diez\auditoria-estatica\DemoAuditApp\obj\Debug\net8.0\DemoAuditApp.AssemblyInfoInputs.cache
-C:\Users\Chaqu\OneDrive\Escritorio\diez\auditoria-estatica\DemoAuditApp\obj\Debug\net8.0\DemoAuditApp.AssemblyInfo.cs
-C:\Users\Chaqu\OneDrive\Escritorio\diez\auditoria-estatica\DemoAuditApp\obj\Debug\net8.0\DemoAuditApp.csproj.CoreCompileInputs.cache
