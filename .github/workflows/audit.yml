@@ -1,0 +1,59 @@
+name: Auditoria Estatica IEEE 1028
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    name: Auditoría Estática de Código
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 8.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Instalar analyzers de .NET
+        run: |
+          dotnet add auditoria-estatica/DemoAuditApp/DemoAuditApp.csproj package Microsoft.CodeAnalysis.NetAnalyzers
+        continue-on-error: true
+
+      - name: Ejecutar script de auditoría estática
+        shell: pwsh
+        run: |
+          ./auditoria-estatica/audit-script.ps1 `
+            -SourcePath auditoria-estatica/DemoAuditApp `
+            -ReportPath auditoria-estatica/audit-results.md `
+            -MinimumPassRate 80
+
+      - name: Subir reporte de auditoría como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-report
+          path: auditoria-estatica/audit-results.md
+
+      - name: Mostrar resultado de auditoría en summary
+        if: always()
+        run: |
+          echo "## Resultado de Auditoría Estática" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f auditoria-estatica/audit-results.md ]; then
+            cat auditoria-estatica/audit-results.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No se generó el reporte de auditoría" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Bloquear merge si la auditoría falló
+        if: failure()
+        run: |
+          echo "❌ AUDITORÍA RECHAZADA - El código no cumple con los estándares IEEE 1028"
+          echo "Revise el reporte: auditoria-estatica/audit-results.md"
+          exit 1
